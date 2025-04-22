@@ -11,7 +11,9 @@
     <div class="container">
         <h1>Create Wallet</h1>
         <p>Create a new wallet.</p>
-        <input type="password" id="wallet-password" placeholder="Password" required>
+        <form id="password-form">
+            <input type="password" id="wallet-password" placeholder="Password" required autocomplete="new-password">
+        </form>
         
         <h4 id="wallet-address-heading">Wallet Address</h4>
         <p id="wallet-address"></p>
