@@ -2,23 +2,31 @@ let web3;
 
 // Auto-init if MetaMask is available
 if (window.ethereum) {
-    web3 = new Web3(window.ethereum);
+    try {
+        web3 = new Web3(window.ethereum);
+    } catch (error) {
+        alert("Failed to connect to MetaMask: " + error.message);
+    }
 } else {
     alert("MetaMask not detected");
 }
 
-function createWallet() {
-    const wallet = web3.eth.accounts.create();
+async function createWallet() {
     const password = document.getElementById("wallet-password").value;
     if (password.length < 0 || password == "") {
         alert("No password provided. Please enter a password.");
         return;
     }
-    const keystore = web3.eth.accounts.encrypt(wallet.privateKey, password);
-    
-    document.getElementById("wallet-address").innerText = wallet.address;
-    document.getElementById("private-key").innerText = wallet.privateKey;
-    document.getElementById("key-store").innerText = JSON.stringify(keystore);
+    try {
+        const wallet = web3.eth.accounts.create();
+        const keystore = web3.eth.accounts.encrypt(wallet.privateKey, password);
+        
+        document.getElementById("wallet-address").innerText = wallet.address;
+        document.getElementById("key-store").innerText = JSON.stringify(keystore);
+        alert("Wallet created successfully!");
+    } catch (error) {
+        alert("Error creating wallet: " + error.message);
+    }
 }
 
 async function saveWallet() {
