@@ -4,5 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Wallet</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="../static/style.css">
+    
+</head>
+<body>
+    <div class="container">
+        <h1>Create Wallet</h1>
+        <p>Create a new wallet.</p>
+        <input type="password" id="wallet-password" placeholder="Password" required>
+        
+        <h4 id="wallet-address-heading">Wallet Address</h4>
+        <p id="wallet-address"></p>
+        
+        <h4 id="private-key-heading">Private Key</h4>
+        <p id="private-key"></p>
+        
+        <h4 id="key-store-heading">Keystore</h4>
+        <p id="key-store"></p>
+        
+        <button id="create-wallet-button">Create Wallet</button>
+        <button id="save-keystore-button">Save Keystore</button>
+
+        <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+        <script type="module" src="../utils.js"></script>
+    </div>
+</body>
 </html>
