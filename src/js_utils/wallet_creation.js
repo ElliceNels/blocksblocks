@@ -1,15 +1,8 @@
 let web3;
 
-// Auto-init if MetaMask is available
-if (window.ethereum) {
-    try {
-        web3 = new Web3(window.ethereum);
-    } catch (error) {
-        alert("Failed to connect to MetaMask: " + error.message);
-    }
-} else {
-    alert("MetaMask not detected");
-}
+// connect to the Sepolia testnet
+const sepoliaProvider = "https://sepolia.infura.io/v3/d78d2c3316144eb1aaf1f3fb0e6d4d3a";
+web3 = new Web3(sepoliaProvider);
 
 async function createWallet() {
     const password = document.getElementById("wallet-password").value;
@@ -22,6 +15,7 @@ async function createWallet() {
         const keystore = web3.eth.accounts.encrypt(wallet.privateKey, password);
         
         document.getElementById("wallet-address").innerText = wallet.address;
+        document.getElementById("private-key").innerText = wallet.privateKey;
         document.getElementById("key-store").innerText = JSON.stringify(keystore);
         alert("Wallet created successfully!");
     } catch (error) {

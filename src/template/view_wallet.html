@@ -5,4 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Wallet</title>
     <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>View Wallet</h1>
+        <h3>View an existing wallet's details.</h3>
+        <form id="wallet-form">
+            <p>Please enter the password to view your wallet details.</p>
+            <input type="password" id="wallet-password" placeholder="Password" required autocomplete="current-password">
+            <input type="text" id="key-store-input" placeholder="Keystore" required>
+            <button id="unlock-wallet-button">View Wallet</button>
+        </form>
+        <p id="wallet-details"></p>
+        <p id="hamilton-details"></p>
+        
+
+        <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+        <script type="module" src="../js_utils/wallet_display.js"></script>
+    </div>
+</body>
 </html>
