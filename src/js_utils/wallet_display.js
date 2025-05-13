@@ -7,7 +7,11 @@ web3 = new Web3(sepoliaProvider);
 async function unlockWallet(event) {
     event.preventDefault();
     const password = document.getElementById("wallet-password").value;
-    const keystore = document.getElementById("key-store-input").value;
+    const fileInput = document.getElementById("key-store-input");
+    const file = fileInput.files[0];
+    const keystore = file ? await file.text() : "";
+
+
     if (keystore == "") {
         alert("Please create a wallet first.");
         return;
