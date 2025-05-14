@@ -47,6 +47,10 @@ contract HamiltonToken is IERC20 {
         locked = false;
     }
 
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Caller is not the owner");
+        _;
+    }
 
     // Runs once deployed
     constructor(uint256 _initialSupply) {
@@ -76,6 +80,13 @@ contract HamiltonToken is IERC20 {
         // Emit the Transfer event
         emit Transfer(owner, msg.sender, _tokens_requested);
         return true;
+    }
+
+    function withdraw() external onlyOwner {
+        require(msg.sender == owner, "Only owner can withdraw");
+        uint256 balance = address(this).balance;
+        require(balance > 0, "No funds to withdraw");
+        payable(owner).transfer(balance);
     }
 
     function transfer(address _receiver, uint256 _tok_amount) public returns (bool) {
