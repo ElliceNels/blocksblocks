@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 interface IERC20{
 
@@ -80,6 +80,7 @@ contract HamiltonToken is IERC20 {
     }
 
     function transfer(address _receiver, uint256 _tok_amount) public returns (bool) {
+        require(_receiver != address(0), "Invalid address");
         require(balanceOf[msg.sender] >= _tok_amount, "Not enough tokens");
         // Remove the tokens from the sender's account
         balanceOf[msg.sender] -= _tok_amount;
@@ -89,7 +90,8 @@ contract HamiltonToken is IERC20 {
         return true;
     }
 
-    function transferFrom(address _sender, address _receiver, uint256 _tok_amount) returns (bool) {
+    function transferFrom(address _sender, address _receiver, uint256 _tok_amount) public returns (bool) {
+        require(_receiver != address(0), "Invalid address");
         require(balanceOf[_sender] >= _tok_amount, "Not enough tokens");
         require(allowance[_sender][msg.sender] >= _tok_amount, "Not enough allowance");
         // Take the tokens from the sender's account
@@ -103,7 +105,7 @@ contract HamiltonToken is IERC20 {
 
     // Letting another user spend a certain amount of tokens from another user's account
     function approve(address _acc, uint256 _tok_amount) public returns (bool) {
-        // Change the user's allowance value
+        require(_acc != address(0), "Invalid address");
         allowance[msg.sender][_acc] = _tok_amount;
         emit Approval(msg.sender, _acc, _tok_amount);
         return true;
