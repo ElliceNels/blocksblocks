@@ -40,12 +40,6 @@ contract HamiltonToken is IERC20 {
         return 0;
     }
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Not the owner");
-        _;
-    }
-
-
     modifier noReentrancy() {
         require(!locked, "No reentrancy");
         locked = true;
@@ -96,7 +90,7 @@ contract HamiltonToken is IERC20 {
         return true;
     }
 
-    function transferFrom(address _sender, address _receiver, uint256 _tok_amount) public onlyOwner returns (bool) {
+    function transferFrom(address _sender, address _receiver, uint256 _tok_amount) returns (bool) {
         require(balanceOf[_sender] >= _tok_amount, "Not enough tokens");
         require(allowance[_sender][msg.sender] >= _tok_amount, "Not enough allowance");
         // Take the tokens from the sender's account
