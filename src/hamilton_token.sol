@@ -13,7 +13,6 @@ interface IERC20{
     function approve(address _spender, uint256 _value) external returns (bool);
     function allowance(address _owner, address _spender) external view returns (uint256);
     function buyTicket(uint256 _tokens_requested) external payable returns (bool);
-    function ticketPrice() external view returns (uint256);
     function useTicket(uint256 _tokens_requested) external returns (bool);
 
     // For logging Transfer and Approval events (Traceability)
