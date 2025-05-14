@@ -18,6 +18,7 @@ interface IERC20{
     // For logging Transfer and Approval events (Traceability)
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
+    event Refund(address indexed user, uint256 amount);
 }
 
 contract HamiltonToken is IERC20 {
@@ -69,10 +70,8 @@ contract HamiltonToken is IERC20 {
         uint256 excessETH = msg.value - ethCost;
         // Check if the excess ether is greater than 0
         if (excessETH > 0) {
-            // Refund the excess ether
-            (bool success, ) = msg.sender.call{value: excessETH}("");
-            require(success, "Refund failed");
-
+            payable(msg.sender).transfer(excessETH);
+            emit Refund(msg.sender, excessETH);
         }
         // Emit the Transfer event
         emit Transfer(owner, msg.sender, _tokens_requested);
