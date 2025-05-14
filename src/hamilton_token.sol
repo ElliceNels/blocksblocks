@@ -41,7 +41,7 @@ contract HamiltonToken is IERC20 {
     }
 
     modifier noReentrancy() {
-        require(!locked, "No reentrancy");
+        require(!locked, "No reentrancy allowed");
         locked = true;
         _;
         locked = false;
