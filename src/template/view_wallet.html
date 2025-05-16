@@ -10,15 +10,9 @@
     <div class="container">
         <h1>View Wallet</h1>
         <h3>View an existing wallet's details.</h3>
-        <form id="meta-mask-form">
-            <p>Click to see MetaMask Account</p>
-            <button id="view-metamask-button">View Meta Account</button>
-        </form>
-        <h1>OR</h1>
         <form id="wallet-form">
-            <p>Please enter the password to view your wallet details.</p>
-            <input type="password" id="wallet-password" placeholder="Password" required autocomplete="current-password">
-            <input type="file" id="key-store-input" placeholder="Keystore" required>
+            <p>Please enter the wallet address.</p>
+            <input type="text" id="wallet-address" placeholder="Address" required>
             <button id="unlock-wallet-button">View Keystore Wallet</button>
         </form>
         <h3 id="detail-heading"></h3>
