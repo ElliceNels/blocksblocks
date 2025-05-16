@@ -9,13 +9,32 @@
 <body>
     <div class="container">
         <h1>Buy Ticket</h1>
-        <p>This is the page for buying tickets</p>
+        
+        <hr>
+        <h2>Load a wallet/account</h2>
+        <form id="meta-mask-form">
+            <button id="view-metamask-button">View Meta Account</button>
+        </form>
+
+        <h3>OR</h1>
+
+        <form id="wallet-form">
+            <input type="password" id="wallet-password" placeholder="Password" required autocomplete="current-password">
+            <input type="file" id="key-store-input" placeholder="Keystore" required>
+            <button id="unlock-wallet-button">View Keystore Wallet</button>
+        </form>
+    
+        <h4 id="address-heading"></h4>
+        <p id="wallet-address"></p>
+
+        <hr>
         <h2>Purchase</h2>
-        <h4>Wallet Address</h4>
-        <input type="text" id="wallet-address" placeholder="Enter wallet address" required>
-        <h4>Quantity needed</h4>
         <input type="number" id="quantity" placeholder="Enter quantity" required>
         <button id="buy-ticket-button">Buy Tickets</button>
+
+        
+        <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+        <script type="module" src="../js_utils/buy_ticket.js"></script>
     </div>
 </body>
 </html>
