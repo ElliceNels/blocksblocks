@@ -5,4 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transfer Ticket</title>
     <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Transfer Ticket to Vendor</h1>
+        <h3>Use a ticket/Return a ticket to vendor</h3>
+        
+        <hr>
+        <h2>Load a wallet/account</h2>
+        <form id="meta-mask-form">
+            <button id="view-metamask-button">View Meta Account</button>
+        </form>
+
+        <h3>OR</h1>
+
+        <form id="wallet-form">
+            <input type="password" id="wallet-password" placeholder="Password" required autocomplete="current-password">
+            <input type="file" id="key-store-input" placeholder="Keystore" required>
+            <button id="unlock-wallet-button">View Keystore Wallet</button>
+        </form>
+    
+        <h4 id="address-heading"></h4>
+        <p id="wallet-address"></p>
+        <hr>
+
+        <p>Use one ticket.</p>
+        <button id="transfer-button">Transfer Ticket</button>
+
+        <p id="transfer-status"></p>
+        <p id="balance"></p>
+
+        <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js"></script>
+        <script type="module" src="../js_utils/token_transfers.js"></script>
+    </div>
 </html>
