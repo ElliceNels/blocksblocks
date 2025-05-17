@@ -24,9 +24,7 @@ async function loadWallet(event) {
     try {
         decryptedWallet = web3.eth.accounts.decrypt(JSON.parse(keystore), password);
         walletAddress = decryptedWallet.address; // Get wallet address
-        document.getElementById("address-heading").innerText = "Wallet Address";
-        document.getElementById("wallet-address").innerText = walletAddress;
-        document.getElementById("balance").innerText = `Balance: ${await contract.methods.balanceOf(walletAddress).call()}`;
+        showWalletDetails();
     } catch (error) {
         alert("Error unlocking wallet: " + error.message);
     }
@@ -47,9 +45,7 @@ async function connectWithMetaMask(event) {
             return;
         }
         walletAddress = accounts[0];
-        document.getElementById("address-heading").innerText = "Wallet Address";
-        document.getElementById("wallet-address").innerText = walletAddress;
-        document.getElementById("balance").innerText = `Balance: ${await contract.methods.balanceOf(walletAddress).call()} ${await contract.methods.symbol().call()}`;
+        showWalletDetails();
     } catch (error) {
         alert("MetaMask error: " + error.message);
     }
@@ -67,7 +63,7 @@ async function useToken() {
                 from: walletAddress,
             });
             alert(`Ticket purchased successfully! Transaction Hash: ${tx.transactionHash}`);
-            document.getElementById("balance").innerText = `Balance: ${await contract.methods.balanceOf(walletAddress).call()} ${await contract.methods.symbol().call()}`;
+            updateBalanceView(walletAddress);
             document.getElementById("transfer-status").innerText = "Status: Success";
         } else if (decryptedWallet) {
             // Keystore flow: sign and send raw transaction
@@ -83,7 +79,7 @@ async function useToken() {
             const signedTx = await web3.eth.accounts.signTransaction(txObject, decryptedWallet.privateKey);
             const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
             alert(`Ticket used successfully! Transaction Hash: ${receipt.transactionHash}`);
-            document.getElementById("balance").innerText = `Balance: ${await contract.methods.balanceOf(walletAddress).call()} ${await contract.methods.symbol().call()}`;
+            updateBalanceView(walletAddress);
             document.getElementById("transfer-status").innerText = "Status: Success";
         } else {
             alert("Please unlock a wallet or connect MetaMask.");
@@ -108,8 +104,8 @@ async function returnToken() {
             const tx = await metaContract.methods.transfer(owner, ticketsUsed).send({
                 from: walletAddress,
             });
-            alert(`Ticket purchased successfully! Transaction Hash: ${tx.transactionHash}\nNew HSP balance: ${await metaContract.methods.balanceOf(walletAddress).call()}`);
-            document.getElementById("balance").innerText = `Balance: ${await contract.methods.balanceOf(walletAddress).call()}`;
+            alert(`Ticket purchased successfully! Transaction Hash: ${tx.transactionHash}`);
+            updateBalanceView(walletAddress);
             document.getElementById("transfer-status").innerText = "Status: Success";
 
         } else if (decryptedWallet) {
@@ -126,7 +122,7 @@ async function returnToken() {
             const signedTx = await web3.eth.accounts.signTransaction(txObject, decryptedWallet.privateKey);
             const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
             alert(`Ticket used successfully! Transaction Hash: ${receipt.transactionHash}`);
-            document.getElementById("balance").innerText = `Balance: ${await contract.methods.balanceOf(walletAddress).call()}`;
+            updateBalanceView(walletAddress);
             document.getElementById("transfer-status").innerText = "Status: Success";
 
         } else {
@@ -137,6 +133,21 @@ async function returnToken() {
         alert("Error using ticket: " + error.message);
         document.getElementById("transfer-status").innerText = "Status: Failed";
     }
+}
+
+async function showWalletDetails() {
+    document.getElementById("address-heading").innerText = "Wallet Address";
+    document.getElementById("wallet-address").innerText = walletAddress;
+    updateBalanceView(walletAddress);
+}
+
+async function updateBalanceView(address) {
+    const balanceElement = document.getElementById("balance");
+    if (balanceElement) {
+        const newBalance = await contract.methods.balanceOf(address).call()
+        balanceElement.innerText = `Balance: ${newBalance} ${await contract.methods.symbol().call()}`;
+    }
+    
 }
 
 document.getElementById("wallet-form").addEventListener("submit", loadWallet);
