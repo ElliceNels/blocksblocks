@@ -23,6 +23,40 @@ body::before {
   z-index: -1; /* Ensures it stays behind other content */
 }
 
+.side-nav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 180px;
+  height: 100vh;
+  background: #cb8e10;
+  color: #fff;
+  padding-top: 40px;
+  z-index: 10;
+}
+.side-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.side-nav li {
+  margin: 20px 0;
+  text-align: center;
+}
+.side-nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+  display: block;
+  padding: 10px 0;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.side-nav a:hover, .side-nav a:focus {
+  background: #222;
+  color: #fff;
+}
+
 .container {
   background: #ffffff;
   border-radius: 20px;
@@ -32,6 +66,7 @@ body::before {
   text-align: center;
   word-wrap: break-word; /*long words break to fit */
   overflow-wrap: break-word; /* Modern equivalent*/
+  margin-left: 170px;
 }
 
 h1 {
