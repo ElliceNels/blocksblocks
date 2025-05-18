@@ -1,8 +1,4 @@
-let web3;
-
-// connect to the Sepolia testnet
-const sepoliaProvider = "https://sepolia.infura.io/v3/d78d2c3316144eb1aaf1f3fb0e6d4d3a";
-web3 = new Web3(sepoliaProvider);
+import { web3} from "./blockchain_config.js";
 
 async function createWallet() {
     const password = document.getElementById("wallet-password").value;

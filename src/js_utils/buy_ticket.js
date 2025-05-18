@@ -1,55 +1,9 @@
-let web3;
+import { web3, contract } from "./blockchain_config.js";
 import { abi } from "./abi.js";
-
-// connect to the Sepolia testnet
-const sepoliaProvider = "https://sepolia.infura.io/v3/d78d2c3316144eb1aaf1f3fb0e6d4d3a";
-web3 = new Web3(sepoliaProvider);
-const contractAddress = "0x7FdCd17404394CCaad8D89EC274fB8a445646cC8";
-const contract = new web3.eth.Contract(abi, contractAddress);
+import { loadWallet, connectWithMetaMask, showWalletDetails, updateBalanceView } from "./wallet_utils.js";
 
 var walletAddress = "";
 var decryptedWallet = null; // Store decrypted wallet for keystore usage
-
-async function loadWallet(event) {
-    event.preventDefault();
-    const password = document.getElementById("wallet-password").value;
-    const fileInput = document.getElementById("key-store-input");
-    const file = fileInput.files[0];
-    const keystore = file ? await file.text() : "";
-
-    if (keystore === "") {
-        alert("Please select a keystore file.");
-        return;
-    }
-    try {
-        decryptedWallet = web3.eth.accounts.decrypt(JSON.parse(keystore), password);
-        walletAddress = decryptedWallet.address; // Get wallet address
-        showWalletDetails();
-    } catch (error) {
-        alert("Error unlocking wallet: " + error.message);
-    }
-}
-
-async function connectWithMetaMask(event) {
-    event.preventDefault();
-    if (!window.ethereum) {
-        alert("MetaMask is not installed.");
-        return;
-    }
-    try {
-        await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const metaWeb3 = new Web3(window.ethereum);
-        const accounts = await metaWeb3.eth.getAccounts();
-        if (accounts.length === 0) {
-            alert("No MetaMask accounts found.");
-            return;
-        }
-        walletAddress = accounts[0];
-        showWalletDetails();
-    } catch (error) {
-        alert("MetaMask error: " + error.message);
-    }
-}
 
 async function buyTicket() {
     const ticketsRequested = document.getElementById("quantity").value;
@@ -67,7 +21,7 @@ async function buyTicket() {
                 from: walletAddress,
                 value: totalPrice.toString()
             });
-            updateBalanceView();
+            updateBalanceView(walletAddress, contract);
             document.getElementById("transfer-status").innerText = "Status: Success";
             alert(`Ticket purchased successfully! Transaction Hash: ${tx.transactionHash}`);
         } else if (decryptedWallet) {
@@ -84,7 +38,7 @@ async function buyTicket() {
             };
             const signedTx = await web3.eth.accounts.signTransaction(txObject, decryptedWallet.privateKey);
             const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-            updateBalanceView();
+            updateBalanceView(walletAddress, contract);
             document.getElementById("transfer-status").innerText = "Status: Success";
             alert(`Ticket purchased successfully! Transaction Hash: ${receipt.transactionHash}`);
         } else {
@@ -96,21 +50,10 @@ async function buyTicket() {
     }
 }
 
-async function showWalletDetails() {
-    document.getElementById("address-heading").innerText = "Wallet Address";
-    document.getElementById("wallet-address").innerText = walletAddress;
-    updateBalanceView(walletAddress);
-}
-
-async function updateBalanceView() {
-    const balanceElement = document.getElementById("balance");
-    if (balanceElement && walletAddress) {
-        const newBalance = await contract.methods.balanceOf(walletAddress).call()
-        balanceElement.innerText = `Balance: ${newBalance} ${await contract.methods.symbol().call()}`;
-    }
-    
-}
-
-document.getElementById("wallet-form").addEventListener("submit", loadWallet);
-document.getElementById("meta-mask-form").addEventListener("submit", connectWithMetaMask);
+document.getElementById("wallet-form").addEventListener("submit", (event) =>
+    loadWallet(event, web3, (addr) => { walletAddress = addr; }, (wallet) => { decryptedWallet = wallet; }, () => showWalletDetails(walletAddress, contract))
+);
+document.getElementById("meta-mask-form").addEventListener("submit", (event) =>
+    connectWithMetaMask(event, (addr) => { walletAddress = addr; }, () => showWalletDetails(walletAddress, contract))
+);
 document.getElementById("buy-ticket-button").addEventListener("click", buyTicket);
