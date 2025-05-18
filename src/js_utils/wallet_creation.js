@@ -7,9 +7,12 @@ async function createWallet() {
         return;
     }
     try {
+        // Create a new wallet
         const wallet = web3.eth.accounts.create();
+        // Encrypt the wallet with the provided password
         const keystore = web3.eth.accounts.encrypt(wallet.privateKey, password);
         
+        // Show the newly created wallet details
         document.getElementById("wallet-address").innerText = wallet.address;
         document.getElementById("private-key").innerText = wallet.privateKey;
         document.getElementById("key-store").innerText = JSON.stringify(keystore);

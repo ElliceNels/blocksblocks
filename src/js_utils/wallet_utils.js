@@ -1,5 +1,6 @@
 // Utility functions for wallet operations
 
+// Load a wallet from a keystore file
 export async function loadWallet(event, web3, setWalletAddress, setDecryptedWallet, showWalletDetails) {
     event.preventDefault();
     const password = document.getElementById("wallet-password").value;
@@ -12,9 +13,12 @@ export async function loadWallet(event, web3, setWalletAddress, setDecryptedWall
         return;
     }
     try {
+        // Decrypt the keystore with the provided password
         const decrypted = web3.eth.accounts.decrypt(JSON.parse(keystore), password);
+        // Set the wallet address and decrypted wallet
         setDecryptedWallet(decrypted);
         setWalletAddress(decrypted.address);
+        // Show the wallet details
         showWalletDetails();
     } catch (error) {
         alert("Error unlocking wallet: " + error.message);
@@ -28,6 +32,7 @@ export async function connectWithMetaMask(event, setWalletAddress, showWalletDet
         return;
     }
     try {
+        // Request account access from MetaMask
         await window.ethereum.request({ method: 'eth_requestAccounts' });
         const metaWeb3 = new Web3(window.ethereum);
         const accounts = await metaWeb3.eth.getAccounts();
@@ -35,6 +40,7 @@ export async function connectWithMetaMask(event, setWalletAddress, showWalletDet
             alert("No MetaMask accounts found.");
             return;
         }
+        // Get the current (first) account
         setWalletAddress(accounts[0]);
         showWalletDetails();
     } catch (error) {
@@ -43,12 +49,14 @@ export async function connectWithMetaMask(event, setWalletAddress, showWalletDet
 }
 
 export async function showWalletDetails(walletAddress, contract) {
+    // Update UI elements
     document.getElementById("address-heading").innerText = "Wallet Address";
     document.getElementById("wallet-address").innerText = walletAddress;
     await updateBalanceView(walletAddress, contract);
 }
 
 export async function updateBalanceView(address, contract) {
+    // Update the balance view
     const balanceElement = document.getElementById("balance");
     if (balanceElement) {
         const newBalance = await contract.methods.balanceOf(address).call();

@@ -16,7 +16,7 @@ async function buyTicket() {
         // Check if MetaMask is being used (walletAddress set by MetaMask, and window.ethereum exists)
         if (window.ethereum && walletAddress && !decryptedWallet) {
             const metaWeb3 = new Web3(window.ethereum);
-            const metaContract = new metaWeb3.eth.Contract(abi, contractAddress);
+            const metaContract = new metaWeb3.eth.Contract(abi, contract.options.address);
             const tx = await metaContract.methods.buyTicket(ticketsRequested.toString()).send({
                 from: walletAddress,
                 value: totalPrice.toString()
@@ -29,7 +29,7 @@ async function buyTicket() {
             const txData = contract.methods.buyTicket(ticketsRequested.toString()).encodeABI();
             const txCount = await web3.eth.getTransactionCount(walletAddress);
             const txObject = {
-                to: contractAddress,
+                to: contract.options.address,
                 value: totalPrice.toString(),
                 gas: 200000,
                 gasPrice: await web3.eth.getGasPrice(),

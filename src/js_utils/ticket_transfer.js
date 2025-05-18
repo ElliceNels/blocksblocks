@@ -13,6 +13,7 @@ async function useToken() {
         if (window.ethereum && walletAddress && !decryptedWallet) {
             const metaWeb3 = new Web3(window.ethereum);
             const metaContract = new metaWeb3.eth.Contract(abi, contract.options.address);
+            // Invoke the useTicket function on the contract
             const tx = await metaContract.methods.useTicket(ticketsUsed).send({
                 from: walletAddress,
             });
@@ -25,11 +26,12 @@ async function useToken() {
             const txCount = await web3.eth.getTransactionCount(walletAddress);
             const txObject = {
                 to: contract.options.address,
-                gas: 200000, // You may want to estimate gas
+                gas: 200000,
                 gasPrice: await web3.eth.getGasPrice(),
                 nonce: txCount,
                 data: txData
             };
+            // Sign the transaction with the decrypted wallet's private key
             const signedTx = await web3.eth.accounts.signTransaction(txObject, decryptedWallet.privateKey);
             const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
             alert(`Ticket used successfully! Transaction Hash: ${receipt.transactionHash}`);
@@ -45,6 +47,8 @@ async function useToken() {
     }
 }
 async function returnToken() {
+    // Return a ticket by transferring it back to the owner
+    // This vendor does not support refunds, so no ether transfer is needed
     const ticketsUsed = 1;
     try {
         document.getElementById("transfer-status").innerText = "Status: In Progress";
@@ -68,7 +72,7 @@ async function returnToken() {
             const txCount = await web3.eth.getTransactionCount(walletAddress);
             const txObject = {
                 to: contract.options.address,
-                gas: 200000, // You may want to estimate gas
+                gas: 200000,
                 gasPrice: await web3.eth.getGasPrice(),
                 nonce: txCount,
                 data: txData
